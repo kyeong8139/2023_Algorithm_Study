@@ -1,0 +1,147 @@
+import java.util.Scanner;
+
+public class Main {
+	static String sen;
+	static boolean[] visited;
+	static StringBuilder sb;
+	static int n;
+	static int cnt;
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		sen = sc.nextLine();
+		if(sen.equals(" ") || sen==null || sen.equals(""))
+			System.exit(0);
+		n = sen.length();
+		visited = new boolean[n];
+		sb = new StringBuilder();
+		cnt = n;
+		int idx = 0;
+		
+		for(int i = 0; i<n; i++) {
+			if (sen.charAt(i)<sen.charAt(idx)) {
+				idx = i;
+			}
+		}
+		visited[idx]=true;
+		cnt--;
+		if(cnt==0) {
+			sb.append(Character.toString(sen.charAt(idx)));
+			System.out.println(sb);
+			System.exit(0);
+		}
+		sb.append(Character.toString(sen.charAt(idx))).append("\n");
+		
+		
+		find(idx);
+	}
+	public static void find(int idx) {
+		if(cnt==1) {
+			sb.append(sen);
+			System.out.println(sb);
+			System.exit(0);
+		}
+		if(cnt==0) {
+			System.out.println(sb);
+			System.exit(0);
+		}
+		
+		int tempidx = -1;
+		boolean can = true;
+		if(idx!=n-1) {
+			for(int i = idx+1; i<n; i++) {
+				if(!visited[i]) {
+					tempidx = i;
+					can= false;
+					break;
+				}
+			}
+			if(!can) {
+				for(int i = tempidx; i<n; i++) {
+					if(!visited[i] && sen.charAt(i)<sen.charAt(tempidx)) {
+						tempidx = i;
+					}
+				}
+			}
+			
+		}
+		if(can) {
+			for(int i = idx-1; i>=0; i--) {
+				if(visited[i] && tempidx!=-1) {
+					break;
+				}
+				if(visited[i]) {					
+					continue;
+				}
+				
+				if(tempidx != -1 && sen.charAt(i)<sen.charAt(tempidx)) {
+					tempidx = i;
+					continue;
+				}
+				
+				if(tempidx == -1 && !visited[i]) {
+					tempidx = i;
+				}
+			}
+		}
+		
+		visited[tempidx]=true;
+		
+		for(int i = 0; i<n; i++) {
+			if(visited[i])
+				sb.append(Character.toString(sen.charAt(i)));
+		}
+		sb.append("\n");
+		cnt--;
+		find(tempidx);
+	}
+	
+}
+
+///////////////////////////////////////////////////////////////////////
+
+import java.util.Scanner;
+
+public class Main {
+	static String sen;
+	static boolean[] visited;
+	static StringBuilder sb;
+	static int n;
+	
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		
+		sen = sc.nextLine();
+		n = sen.length();
+		visited = new boolean[n];
+		sb = new StringBuilder();
+		find(0, n);
+		System.out.println(sb);
+		
+	}
+	public static void find(int start, int end) {
+		if(start>=end) {
+			return;
+		}
+		int idx = start;
+		for(int i = start; i<end; i++) {
+			if (sen.charAt(i)<sen.charAt(idx)) {
+				idx = i;
+			}
+		}
+		visited[idx]=true;
+		for(int i = 0; i<n; i++) {
+			if (visited[i]) {
+				sb.append(Character.toString(sen.charAt(i)));
+			}
+		}
+				
+		sb.append("\n");
+		
+		find(idx+1, end);
+		find(start, idx);
+	}
+	
+
+}
